@@ -1,0 +1,12 @@
+# Ignore all sol_ output folders (any run name)
+sol_*/
+
+# Ignore all meshes_ output folders
+meshes_*/
+
+# Ignore the DFNs folder entirely (new subfolders get created inside)
+DFNs/
+
+# Python cache
+__pycache__/
+*.pyc
