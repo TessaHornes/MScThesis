@@ -14,12 +14,12 @@ from DFNMeshFiles.mesh.FractureProcessing.mesh_raw_fractures import mesh_raw_fra
 # Stage control
 # ==============================================================================
 generateDFN   = True  # True → generate DFN txt files with GeoDFN
-buildMesh     = True   # True → run gmsh to build .msh from DFN txt files
+buildMesh     = False   # True → run gmsh to build .msh from DFN txt files
 
 # ==============================================================================
 # DFN settings 
 # ==============================================================================
-DFN_name = 'Test5'
+DFN_name = 'Test1'
 
 apertureCalculationParameters = {
     'method': 'constant',
@@ -97,7 +97,7 @@ numOfRealizations = 1
 # ==============================================================================
 # Simulation settings
 # ==============================================================================
-Simulation_name = 'Test_5'
+Simulation_name = 'Test_1'
 
 problem_type = 'fracture'   # 'fracture' or 'lineSource'
 char_len_list = [16]   # small (fine), medium, large (coarse), options are 16, 32, 64, takes an array 

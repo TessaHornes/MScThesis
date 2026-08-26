@@ -14,13 +14,13 @@ def input_data_nomesh(case_name, mesh_file):
     idata.geom['mesh_filename'] = mesh_file 
 
     # well locations
-    idata.geom['inj_well_coords'] = [[50, 50, 50]]  # X, Y, Z (only one perforation)
-    idata.geom['prod_well_coords'] = [[1950, 1950, 50]]
+    idata.geom['inj_well_coords'] = [[500, 500, 50]]  # X, Y, Z (only one perforation)
+    idata.geom['prod_well_coords'] = [[1500, 1500, 50]]
 
     idata.geom['well_coords'] = dict()
 
-    idata.geom['well_coords']['I1'] = [50., 50., 30, 60]  # X, Y, Z1, Z2
-    idata.geom['well_coords']['P1'] = [1950., 1950., 30, 60]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['P1'] = [1500., 1500., 0, 100]  # X, Y, Z1, Z2
 
     # will be passed to UnstructuredDiscretizer
     idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]

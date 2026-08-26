@@ -26,9 +26,9 @@ def input_data_mesh(case_name, fractext, domainLengthX, domainLengthY, height):
     idata.geom['box_data'] = np.array([[0, 0], [domainLengthX, 0], [domainLengthX, domainLengthY], [0, domainLengthY]])  # [m] mesh bounds (in case of no margin defined)
 
     # cell sizes
-    idata.geom['char_len'] = 16  # near fractures (characteristic length for cleaning and mesh generation) [m]
-    idata.geom['char_len_boundary'] = 16  # grid size near grid boundaries [m]
-    idata.geom['char_len_well'] = 16  # grid size near wells [m]
+    idata.geom['char_len'] = 50  # near fractures (characteristic length for cleaning and mesh generation) [m]
+    idata.geom['char_len_boundary'] = 150  # grid size near grid boundaries [m]
+    idata.geom['char_len_well'] = 50  # grid size near wells [m]
 
     # geometry (both for DFN and model)
     idata.geom['z_top'] = 0  # [m]
@@ -50,13 +50,13 @@ def input_data_mesh(case_name, fractext, domainLengthX, domainLengthY, height):
     idata.geom['underburden_2_layers'] = 0
 
     # well locations
-    idata.geom['inj_well_coords'] = [[50, 50, 50]]  # X, Y, Z (only one perforation)
-    idata.geom['prod_well_coords'] = [[1950, 1950, 50]]
+    idata.geom['inj_well_coords'] = [[550, 500, 50]]  # X, Y, Z (only one perforation)
+    idata.geom['prod_well_coords'] = [[1500, 1500, 50]]
 
     idata.geom['well_coords'] = dict()
 
-    idata.geom['well_coords']['I1'] = [50., 50., 30, 60]  # X, Y, Z1, Z2
-    idata.geom['well_coords']['P1'] = [1950., 1950., 30, 60]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['P1'] = [1950., 1950., 0, 100]  # X, Y, Z1, Z2
 
     # The properties below do not affect mesh generation stage. So no need to re-generate the mesh if you change them.
 
@@ -64,8 +64,8 @@ def input_data_mesh(case_name, fractext, domainLengthX, domainLengthY, height):
     idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]
 
     # well in the matrix cells or in the fractures
-    idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
-    #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
+    #idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
+    idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
     #idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
 
     # to mimic an infinite reservoir
