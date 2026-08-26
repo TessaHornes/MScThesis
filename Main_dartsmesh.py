@@ -4,7 +4,7 @@ from Simulation_darts import run_simulation
 import os
 
 # List of all simulations
-simulation_names = ['Test5'] 
+simulation_names = ['Test1'] 
 
 # Define path to mesh and aperture data
 base_dir = os.path.dirname(os.path.abspath(__file__))

@@ -26,8 +26,8 @@ def run_simulation(idata : InputData, platform : str ='cpu'):
     m.set_output(output_folder = output_directory)
 
     # Specify some other time-related properties (NOTE: all time parameters are in [days])
-    size_report_step = 300  # Size of the reporting step
-    num_report_steps = 12*6   # Number of reporting steps (see above)
+    size_report_step = 60  # Size of the reporting step
+    num_report_steps = 12*5   # Number of reporting steps (see above)
     output_vtk_period = 12  # output each output_vtk_period-th step results to tk
 
     output_properties_main = m.physics.vars  # only main variables
