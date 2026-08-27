@@ -1,7 +1,7 @@
 from darts.input.input_data import InputData
 import numpy as np
 
-def input_data_mesh(case_name, fractext, domainLengthX, domainLengthY, height):
+def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, height):
     idata = InputData(type_hydr='thermal', type_mech='none', init_type='gradient')
     idata.geom = dict()
     ###########################################################################################################
@@ -50,22 +50,23 @@ def input_data_mesh(case_name, fractext, domainLengthX, domainLengthY, height):
     idata.geom['underburden_2_layers'] = 0
 
     # well locations
-    idata.geom['inj_well_coords'] = [[550, 500, 50]]  # X, Y, Z (only one perforation)
+    idata.geom['inj_well_coords'] = [[500, 500, 50]]  # X, Y, Z (only one perforation)
     idata.geom['prod_well_coords'] = [[1500, 1500, 50]]
 
     idata.geom['well_coords'] = dict()
 
     idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
-    idata.geom['well_coords']['P1'] = [1950., 1950., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['P1'] = [1500., 1500., 0, 100]  # X, Y, Z1, Z2
 
     # The properties below do not affect mesh generation stage. So no need to re-generate the mesh if you change them.
 
     # will be passed to UnstructuredDiscretizer
-    idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]
+    # idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]
+    idata.geom['frac_aper'] = np.loadtxt(apertxt)
 
     # well in the matrix cells or in the fractures
-    #idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
-    idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
+    idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
+    #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
     #idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
 
     # to mimic an infinite reservoir

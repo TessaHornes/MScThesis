@@ -96,7 +96,7 @@ def generate_mesh(idata : InputData):
     num_partition_y = 4  # " ... "
 
     frac_preprocessing(frac_data_raw, char_len=idata.geom['char_len'], output_dir=output_dir, filename_base=idata.geom['case_name'], merge_threshold=merge_threshold, z_top=idata.geom['z_top'],
-                       height_res=idata.geom['height_res'], angle_tol_small_intersect=angle_tol_remove_segm, apertures_raw=None, box_data=idata.geom['box_data'], margin=idata.geom['margin'],
+                       height_res=idata.geom['height_res'], angle_tol_small_intersect=angle_tol_remove_segm, apertures_raw=idata.geom['frac_aper'], box_data=idata.geom['box_data'], margin=idata.geom['margin'],
                        mesh_clean=idata.geom['mesh_clean'], mesh_raw=mesh_raw, angle_tol_straighten=angle_tol_straighten, straighten_after_cln=True, decimals=decimals,
                        tolerance_zero=1e-10, tolerance_intersect=1e-10, calc_intersections_before=False, calc_intersections_after=False,
                        num_partition_x=num_partition_x, num_partition_y=num_partition_y, partition_fractures_in_segms=True, matrix_perm=1, correct_aperture=False,

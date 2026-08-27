@@ -19,20 +19,20 @@ buildMesh     = False   # True → run gmsh to build .msh from DFN txt files
 # ==============================================================================
 # DFN settings 
 # ==============================================================================
-DFN_name = 'Test1'
+DFN_name = 'Test_aper'
 
-apertureCalculationParameters = {
-    'method': 'constant',
-    'aperture': 0.005,   
-}
-
-# # EDIT - sublinear aperture calculations 
 # apertureCalculationParameters = {
-#     'method': 'subLinear',
-#     'scalingCoefficient': 5e-5,   
-#     'scalingExponent': 0.5,
+#     'method': 'constant',
+#     'aperture': 0.005,   
 # }
-# # End of edit 
+
+# EDIT - sublinear aperture calculations 
+apertureCalculationParameters = {
+    'method': 'subLinear',
+    'scalingCoefficient': 5e-5,   
+    'scalingExponent': 0.5,
+}
+# End of edit 
 
 set_1 = {
     'I': 0.01,
@@ -45,38 +45,49 @@ set_1 = {
     'bufferZone': {'method': 'constant', 'constant': 2.0},
 }
 
-set_2 = {
-    'I': 0.02,
-    'fractureLengthPDF': 'Exponential',
-    'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
-    'spatialDistributionPDF': 'Uniform',
-    'spatialDistributionPDFParams': {'max distance': 2000},
-    'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 30.56, 'loc':0.62},    
-    'bufferZone': {'method': 'constant', 'constant': 2.0},
-}
+# set_1 = {
+#     'I': 0.01,
+#     'fractureLengthPDF': 'Exponential',
+#     'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
+#     'spatialDistributionPDF': 'Uniform',
+#     'spatialDistributionPDFParams': {'max distance': 2000},
+#     'orientationDistributionPDF': 'Von-Mises',
+#     'orientationDistributionPDFParams': {'kappa': 61.42, 'loc':1.57},   
+#     'bufferZone': {'method': 'constant', 'constant': 2.0},
+# }
 
-set_3 = {
-    'I': 0.04,
-    'fractureLengthPDF': 'Exponential',
-    'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
-    'spatialDistributionPDF': 'Uniform',
-    'spatialDistributionPDFParams': {'max distance': 2000},
-    'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 34.37, 'loc':2.61},    #
-    'bufferZone': {'method': 'constant', 'constant': 2.0},
-}
+# set_2 = {
+#     'I': 0.02,
+#     'fractureLengthPDF': 'Exponential',
+#     'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
+#     'spatialDistributionPDF': 'Uniform',
+#     'spatialDistributionPDFParams': {'max distance': 2000},
+#     'orientationDistributionPDF': 'Von-Mises',
+#     'orientationDistributionPDFParams': {'kappa': 30.56, 'loc':0.62},    
+#     'bufferZone': {'method': 'constant', 'constant': 2.0},
+# }
 
-set_4 = {
-    'I': 0.04,
-    'fractureLengthPDF': 'Exponential',
-    'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
-    'spatialDistributionPDF': 'Uniform',
-    'spatialDistributionPDFParams': {'max distance': 2000},
-    'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 15.46, 'loc':0.77},    #
-    'bufferZone': {'method': 'constant', 'constant': 2.0},
-}
+# set_3 = {
+#     'I': 0.04,
+#     'fractureLengthPDF': 'Exponential',
+#     'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
+#     'spatialDistributionPDF': 'Uniform',
+#     'spatialDistributionPDFParams': {'max distance': 2000},
+#     'orientationDistributionPDF': 'Von-Mises',
+#     'orientationDistributionPDFParams': {'kappa': 34.37, 'loc':2.61},    #
+#     'bufferZone': {'method': 'constant', 'constant': 2.0},
+# }
+
+# set_4 = {
+#     'I': 0.04,
+#     'fractureLengthPDF': 'Exponential',
+#     'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
+#     'spatialDistributionPDF': 'Uniform',
+#     'spatialDistributionPDFParams': {'max distance': 2000},
+#     'orientationDistributionPDF': 'Von-Mises',
+#     'orientationDistributionPDFParams': {'kappa': 15.46, 'loc':0.77},    #
+#     'bufferZone': {'method': 'constant', 'constant': 2.0},
+# }
 
 # set_test = {
 #     'I': 1,
@@ -89,15 +100,15 @@ set_4 = {
 #     'bufferZone': {'method': 'constant', 'constant': 2.0},
 # }
 
-dfn_sets          = [set_1, set_2, set_3, set_4]
-domainLengthX     = 2000   # m
-domainLengthY     = 2000   # m
+dfn_sets          = [set_1]
+domainLengthX     = 1000   # m
+domainLengthY     = 1000   # m
 numOfRealizations = 1
 
 # ==============================================================================
 # Simulation settings
 # ==============================================================================
-Simulation_name = 'Test_1'
+Simulation_name = 'Test_aper'
 
 problem_type = 'fracture'   # 'fracture' or 'lineSource'
 char_len_list = [16]   # small (fine), medium, large (coarse), options are 16, 32, 64, takes an array 
