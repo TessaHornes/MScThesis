@@ -34,8 +34,6 @@ class Model(CICDModel):
 
         # Some permeability input data for the simulation
         poro = idata.rock.porosity  # Matrix porosity [-]
-        frac_aper = idata.geom['frac_aper']  # Aperture of fracture cells (but also takes a list of apertures for each segment) [m]
-
         self.inj_well_coords = idata.geom['inj_well_coords']
         self.prod_well_coords = idata.geom['prod_well_coords']
 
@@ -44,6 +42,28 @@ class Model(CICDModel):
             mesh_file = os.path.join('meshes_' + idata.geom['case_name'], idata.geom['case_name'] + fname)
         else:
             mesh_file = input_data['mesh_filename']
+
+        # Gmsh can subdivide one physical fracture segment into several cells.
+        # Map each segment aperture to all cells carrying that segment's tag.
+        msh = meshio.read(mesh_file)
+        c = msh.cell_data_dict['gmsh:physical']
+        frac_tag_start = idata.geom['frac_tag_start']
+        frac_geom_type = 'quad'
+        if idata.geom['mesh_type'] == '3D' and 'triangle' in c:
+            frac_geom_type = 'triangle'
+
+        frac_aper = idata.geom['frac_aper']
+        if not np.isscalar(frac_aper):
+            segment_apertures = np.asarray(frac_aper).reshape(-1)
+            cell_tags = c[frac_geom_type]
+            fracture_cell_tags = cell_tags[cell_tags >= frac_tag_start]
+            segment_indices = fracture_cell_tags - frac_tag_start
+            if segment_indices.size and segment_indices.max() >= segment_apertures.size:
+                raise ValueError(
+                    f'Mesh references fracture segment {segment_indices.max()}, but only '
+                    f'{segment_apertures.size} segment apertures were supplied.'
+                )
+            frac_aper = segment_apertures[segment_indices]
 
         if idata.rock.perm_file is not None: # set heterogeneous permeability from a file
             permx = self.get_perm_unstr_from_struct_grid(idata.rock.perm_file, self.input_data)
@@ -69,19 +89,11 @@ class Model(CICDModel):
             self.reservoir.sh_max_azimuth = idata.stress['SHmax_azimuth']
             self.reservoir.sigma_c = idata.stress['sigma_c']
 
-        # read mesh to get the number of fractures for tags specification, frac_geom_type and frac_tag_start
-        msh = meshio.read(mesh_file)
-        c = msh.cell_data_dict['gmsh:physical']
-
         # 'MeshIt':  # 3D mesh from meshIt software, the tags are hardcoded below according to MeshIt conventions
-        frac_tag_start = idata.geom['frac_tag_start']
         matrix_tags = idata.geom['matrix_tags']
         bnd_xy_tags = [3, 4, 5, 6]
         bnd_tags = [1, 2] + bnd_xy_tags
 
-        frac_geom_type = 'quad' # extruded 2D or 3D with hexahedron cells
-        if idata.geom['mesh_type'] == '3D' and 'triangle' in c.keys():
-            frac_geom_type = 'triangle'  # 3D tetrahedron mesh
         n_fractures = (np.unique(c[frac_geom_type]) >= frac_tag_start).sum()
 
         self.reservoir.physical_tags['matrix'] = matrix_tags
@@ -114,16 +126,20 @@ class Model(CICDModel):
                                t_origin=self.idata.obl.t_origin,
                                is_ph=False)
 
-        # Some tuning parameters:
-        self.nonlinear_solver = NewtonSolver(tolerance=1e-4,
-                                           chop=ChopSpec(mode='local', factor=0.2))  # nonlinear update chopping strategy
-        self.set_sim_params(first_ts=1e-6, mult_ts=1.5, max_ts=60, tol_linear=1e-5)
-        # direct linear solver
-        #if int(input_data['overburden_layers']) + int(input_data['underburden_layers']) > 0:
-        #    self.params.linear_type = sim_params.cpu_superlu
-
         # End timer for model initialization:
         self.timer.node["initialization"].stop()
+
+    def set_solver(self):
+        """Configure nonlinear and linear solvers after platform initialization."""
+        self.set_sim_params(first_ts=1e-6, mult_ts=1.5, max_ts=60)
+        super().set_solver()
+        self.nonlinear_solver = NewtonSolver(
+            tolerance=1e-4,
+            max_iterations=20,
+            chop=ChopSpec(mode='local', factor=1),
+        )
+        self.linear_solver.spec.tolerance = 1e-5
+        self.linear_solver.spec.max_iterations = 40
 
     def set_iapws_physics(self, p_step, p_origin, t_step, t_origin, is_ph: bool, cache=False):
         """Drop-in replacement for legacy Geothermal(...) using compositional + IAPWS PT-flash.
@@ -232,48 +248,27 @@ class Model(CICDModel):
         inj_rate = wctrl.inj_rate
         prod_rate = wctrl.prod_rate
 
-        P = self.get_pressure('full')
-        T = self.get_temperature('full')
-
-        if P.size == 0:
-            inj_temp = 300.
-            inj_rate = 0.
-            prod_rate = 0.
-
+        inj_temp = 300.
+     
         for i, w in enumerate(self.reservoir.wells):
             well_top_perf_idx = self.well_perf_loc[w.name][0]
             if self.well_is_inj(w.name):
-                if inj_rate is None:  # BHP control
-                    inj_bhp = P[well_top_perf_idx] + wctrl.delta_p_prod  # rsv block pressure at the top perforation + delta_p
-                    inj_temp = T[well_top_perf_idx] - wctrl.delta_temp
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
-                                                   is_inj=True, target=inj_bhp, inj_composition=[], inj_temp=inj_temp)
-                else:
-                    # Rate Control
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
-                                                   is_inj=True, target=inj_rate, phase_name='L', inj_composition=[], inj_temp=inj_temp)
-                    # BHP Constraint
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
-                                                   is_inj=True, target=wctrl.inj_bhp_constraint, inj_composition=[],
-                                                   inj_temp=inj_temp)
+                
+                # Rate Control
+                self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
+                                                is_inj=True, target=inj_rate, phase_name='L', inj_composition=[], inj_temp=inj_temp)
+                # BHP Constraint
+                self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
+                                                is_inj=True, target=wctrl.inj_bhp_constraint, inj_composition=[],
+                                                inj_temp=inj_temp)
             else:
-                if prod_rate is None:  # BHP control
-                    prod_bhp = P[well_top_perf_idx] - wctrl.delta_p_prod  # rsv block pressure at the top perforation - delta_p
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
-                                                   is_inj=False, target=prod_bhp)
-                else:
-                    # Rate Control
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
-                                                   is_inj=False, target=-np.abs(prod_rate), phase_name='L')
-                    # BHP Constraint
-                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
-                                                   is_inj=False, target=wctrl.prod_bhp_constraint)
+                # Rate Control
+                self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
+                                                is_inj=False, target=-np.abs(prod_rate), phase_name='L')
+                # BHP Constraint
+                self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
+                                                is_inj=False, target=wctrl.prod_bhp_constraint)
 
-            # print(w.name,
-            #       w.well_head_depth,
-            #       w.control.target_pressure if hasattr(w.control, 'target_pressure') else '',
-            #       w.control.target_temperature if hasattr(w.control, 'target_temperature') else '',
-            #       w.control.target_rate if hasattr(w.control, 'target_rate') else '')
         return 0
 
     def get_mat_frac_range(self, part):

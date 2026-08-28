@@ -8,5 +8,5 @@ meshes_*/
 DFNs/
 
 # Python cache
-__pycache__/
 *.pyc
+*__pycache__*

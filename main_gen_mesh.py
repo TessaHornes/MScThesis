@@ -1,12 +1,28 @@
 import numpy as np
 from multiprocessing import freeze_support
 import os
+import sys
 from datetime import datetime
 import shutil
 
 from darts.input.input_data import InputData
 from darts.tools.fracture_network.preprocessing_code import frac_preprocessing
 from darts.engines import redirect_darts_output
+
+
+def _ensure_gmsh_on_path():
+    """Expose the Gmsh executable installed beside the active Python."""
+    if shutil.which('gmsh') is not None:
+        return
+
+    environment_bin = os.path.dirname(sys.executable)
+    gmsh_executable = os.path.join(environment_bin, 'gmsh')
+    if not (os.path.isfile(gmsh_executable) and os.access(gmsh_executable, os.X_OK)):
+        raise FileNotFoundError(
+            "Gmsh is not installed in the active Python environment. "
+            "Install it with `conda install -c conda-forge gmsh`."
+        )
+    os.environ['PATH'] = environment_bin + os.pathsep + os.environ.get('PATH', '')
 
 def rotate_input(input_data, frac_data_raw):
     rot_angle_degrees = 90 - input_data['SHmax_azimuth']
@@ -39,6 +55,7 @@ def rotate_input(input_data, frac_data_raw):
     input_data['inj_well_coords'] = inj_wells_out
 
 def generate_mesh(idata : InputData):
+    _ensure_gmsh_on_path()
     case_name = idata.geom['case_name']
     print('case', case_name)
     output_dir = 'meshes_' + case_name

@@ -50,20 +50,17 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
     idata.geom['underburden_2_layers'] = 0
 
     # well locations
-    idata.geom['inj_well_coords'] = [[200, 200, 50]]  # X, Y, Z (only one perforation)
+    idata.geom['inj_well_coords'] = [[500, 500, 50]]  # X, Y, Z (only one perforation)
     idata.geom['prod_well_coords'] = [[800, 800, 50]]
 
     idata.geom['well_coords'] = dict()
 
-    idata.geom['well_coords']['I1'] = [200., 200., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
     idata.geom['well_coords']['P1'] = [800., 800., 0, 100]  # X, Y, Z1, Z2
 
     # The properties below do not affect mesh generation stage. So no need to re-generate the mesh if you change them.
-
-    # will be passed to UnstructuredDiscretizer
-    # idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]
-    idata.geom['frac_aper'] = np.loadtxt(apertxt)
-
+    idata.geom['frac_aper'] = np.loadtxt(apertxt) 
+    
     # well in the matrix cells or in the fractures
     idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
     #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
@@ -73,8 +70,8 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
     idata.geom['bondary_volume_xy'] = 1e+15  # [m^3]
 
     idata.rock.porosity = 0.089
-    idata.rock.permx = 0.01 # [mD]
-    idata.rock.permy = 0.01  # [mD]
+    idata.rock.permx = 0.1 # [mD]
+    idata.rock.permy = 0.1  # [mD]
     idata.rock.permz = 1e-5 # [mD]
     idata.rock.perm_file = None  # if want to read the permeability from a file
 
@@ -98,8 +95,8 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
             pass
     idata.well_data.controls = InputDataWellControls()
     wctrl = idata.well_data.controls  #short name
-    wctrl.prod_rate = None  # m3/day. if None, well will work under BHP control
-    wctrl.inj_rate = None   # m3/day. if None, well will work under BHP control
+    wctrl.prod_rate = 8000  # m3/day. if None, well will work under BHP control
+    wctrl.inj_rate = 8000   # m3/day. if None, well will work under BHP control
     wctrl.delta_temp = 40   # bars. inj_temp = initial_temp - delta_temp
     wctrl.delta_p_inj  = 30  # bars. inj_bhp = initial_pressure + delta_p_inj
     wctrl.delta_p_prod = 30  # bars. inj_prod = initial_pressure - delta_p_prod

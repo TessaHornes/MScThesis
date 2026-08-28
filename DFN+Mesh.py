@@ -35,14 +35,28 @@ apertureCalculationParameters = {
 # End of edit 
 
 set_1 = {
-    'I': 0.01,
+    'I': 0.02,
     'fractureLengthPDF': 'Exponential',
     'fractureLengthPDFParams': {'lambda':0.0083, 'Lmin':5.43, 'Lmax':679},
     'spatialDistributionPDF': 'Uniform',
-    'spatialDistributionPDFParams': {'max distance': 2000},
+    'spatialDistributionPDFParams': {'max distance': 350},
     'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 61.42, 'loc':1.57},   
-    'bufferZone': {'method': 'constant', 'constant': 2.0},
+    'orientationDistributionPDFParams': {'kappa': 30.0, 'loc':1.57},
+    # Zero spacing permits intersections; a positive value rejects them.
+    'bufferZone': {'method': 'constant', 'constant': 0.0},
+}
+
+# A near-orthogonal family creates crossings with set_1 and therefore a
+# connected network rather than a collection of nearly parallel segments.
+set_2 = {
+    'I': 0.02,
+    'fractureLengthPDF': 'Exponential',
+    'fractureLengthPDFParams': {'lambda': 0.0083, 'Lmin': 5.43, 'Lmax': 679},
+    'spatialDistributionPDF': 'Uniform',
+    'spatialDistributionPDFParams': {'max distance': 350},
+    'orientationDistributionPDF': 'Von-Mises',
+    'orientationDistributionPDFParams': {'kappa': 30.0, 'loc': 0.0},
+    'bufferZone': {'method': 'constant', 'constant': 0.0},
 }
 
 # set_1 = {
@@ -100,7 +114,7 @@ set_1 = {
 #     'bufferZone': {'method': 'constant', 'constant': 2.0},
 # }
 
-dfn_sets          = [set_1]
+dfn_sets          = [set_1, set_2]
 domainLengthX     = 1000   # m
 domainLengthY     = 1000   # m
 numOfRealizations = 1

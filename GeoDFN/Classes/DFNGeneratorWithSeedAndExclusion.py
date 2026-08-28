@@ -13,7 +13,6 @@ from .orientationPDFs import OrientationPDFs
 from ._validation import validate_inputs_with_seed
 
 from matplotlib.colors import Normalize
-from matplotlib.cm import get_cmap
 import matplotlib.colors as mcolors
 
 logger = logging.getLogger(__name__)
