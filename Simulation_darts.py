@@ -7,7 +7,7 @@ from Model_darts import Model
 from darts.engines import redirect_darts_output
 #import shutil
 from datetime import datetime
-from darts.tools.plot_darts import plot_temp_darts
+#from darts.tools.plot_darts import plot_temp_darts
 #import pickle
 from darts.input.input_data import InputData
 
@@ -27,7 +27,7 @@ def run_simulation(idata : InputData, platform : str ='cpu'):
 
     # Specify some other time-related properties (NOTE: all time parameters are in [days])
     size_report_step = 365  # Size of the reporting step
-    num_report_steps = 80   # Number of reporting steps (see above)
+    num_report_steps = 30   # Number of reporting steps (see above)
 
     output_properties_main = m.physics.vars  # only main variables
     output_properties_with_temperature = output_properties_main + ['temperature']
