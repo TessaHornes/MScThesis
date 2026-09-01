@@ -51,12 +51,12 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
 
     # well locations
     idata.geom['inj_well_coords'] = [[500, 500, 50]]  # X, Y, Z (only one perforation)
-    idata.geom['prod_well_coords'] = [[800, 800, 50]]
+    idata.geom['prod_well_coords'] = [[1500, 1500, 50]]
 
     idata.geom['well_coords'] = dict()
 
     idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
-    idata.geom['well_coords']['P1'] = [800., 800., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['P1'] = [1500., 1500., 0, 100]  # X, Y, Z1, Z2
 
     # The properties below do not affect mesh generation stage. So no need to re-generate the mesh if you change them.
     idata.geom['frac_aper'] = np.loadtxt(apertxt) 

@@ -3,8 +3,10 @@ from main_gen_mesh import generate_mesh
 from Simulation_darts import run_simulation
 import os
 
+import numpy as np
+
 # List of all simulations
-simulation_names = ['Test_aper'] 
+simulation_names = ['Test1'] 
 
 # Define path to mesh and aperture data
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,7 +24,7 @@ for sim_name in simulation_names:
     )
 
     # Load mesh and aperture data in input data
-    Input_data = input_data_mesh(case_name=sim_name, fractext=fractext_path, apertxt=apertext_path, domainLengthX=1000, domainLengthY=1000, height=100)
+    Input_data = input_data_mesh(case_name=sim_name, fractext=fractext_path, apertxt=apertext_path, domainLengthX=2000, domainLengthY=2000, height=100)
 
     # Create mesh 
     generate_mesh (Input_data)

@@ -1,6 +1,6 @@
 from darts.engines import value_vector, sim_params, well_control_iface
 from darts.nonlinear_solvers import NewtonSolver, ChopSpec
-from darts.models.cicd_model import CICDModel
+
 from darts.models.darts_model import DartsModel
 from darts.physics.base.physics import PhysicsBase
 from darts.physics.iapws_physics import IAPWSPhysics
