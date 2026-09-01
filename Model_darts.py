@@ -1,6 +1,7 @@
 from darts.engines import value_vector, sim_params, well_control_iface
 from darts.nonlinear_solvers import NewtonSolver, ChopSpec
 from darts.models.cicd_model import CICDModel
+from darts.models.darts_model import DartsModel
 from darts.physics.base.physics import PhysicsBase
 from darts.physics.iapws_physics import IAPWSPhysics
 from darts.physics.base.property_container import PropertyContainer
@@ -20,7 +21,7 @@ def fmt(x):
 
 # Here the Model class is defined (child-class from DartsModel) in which most of the data and properties for the
 # simulation are defined, e.g. for the reservoir/physics/sim_parameters/etc.
-class Model(CICDModel):
+class Model(DartsModel):
     def __init__(self, idata : InputData):
         # base class constructor
         super().__init__()
@@ -248,26 +249,42 @@ class Model(CICDModel):
         inj_rate = wctrl.inj_rate
         prod_rate = wctrl.prod_rate
 
-        inj_temp = 300.
-     
+        pressure = self.get_pressure('full')
+        temperature = self.get_temperature('full')
+
         for i, w in enumerate(self.reservoir.wells):
             well_top_perf_idx = self.well_perf_loc[w.name][0]
             if self.well_is_inj(w.name):
-                
-                # Rate Control
-                self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
-                                                is_inj=True, target=inj_rate, phase_name='L', inj_composition=[], inj_temp=inj_temp)
-                # BHP Constraint
-                self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
-                                                is_inj=True, target=wctrl.inj_bhp_constraint, inj_composition=[],
-                                                inj_temp=inj_temp)
+                if inj_rate is None:  # BHP control
+                    inj_bhp = pressure[well_top_perf_idx] + wctrl.delta_p_inj
+                    inj_temp = temperature[well_top_perf_idx] - wctrl.delta_temp
+                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
+                                                   is_inj=True, target=inj_bhp, inj_composition=[],
+                                                   inj_temp=inj_temp)
+                else:
+                    inj_temp = 300.
+                    # Rate Control
+                    self.physics.set_well_controls(wctrl=w.control,
+                                                   control_type=well_control_iface.VOLUMETRIC_RATE,
+                                                   is_inj=True, target=inj_rate, phase_name='L',
+                                                   inj_composition=[], inj_temp=inj_temp)
+                    # BHP Constraint
+                    self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
+                                                   is_inj=True, target=wctrl.inj_bhp_constraint,
+                                                   inj_composition=[], inj_temp=inj_temp)
             else:
-                # Rate Control
-                self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.VOLUMETRIC_RATE,
-                                                is_inj=False, target=-np.abs(prod_rate), phase_name='L')
-                # BHP Constraint
-                self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
-                                                is_inj=False, target=wctrl.prod_bhp_constraint)
+                if prod_rate is None:  # BHP control
+                    prod_bhp = pressure[well_top_perf_idx] - wctrl.delta_p_prod
+                    self.physics.set_well_controls(wctrl=w.control, control_type=well_control_iface.BHP,
+                                                   is_inj=False, target=prod_bhp)
+                else:
+                    # Rate Control
+                    self.physics.set_well_controls(wctrl=w.control,
+                                                   control_type=well_control_iface.VOLUMETRIC_RATE,
+                                                   is_inj=False, target=-np.abs(prod_rate), phase_name='L')
+                    # BHP Constraint
+                    self.physics.set_well_controls(wctrl=w.constraint, control_type=well_control_iface.BHP,
+                                                   is_inj=False, target=wctrl.prod_bhp_constraint)
 
         return 0
 
