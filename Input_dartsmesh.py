@@ -63,15 +63,15 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
     
     # well in the matrix cells or in the fractures
     idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
-    #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
-    #idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
+    # idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
+    # idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
 
     # to mimic an infinite reservoir
     idata.geom['bondary_volume_xy'] = 1e+15  # [m^3]
 
     idata.rock.porosity = 0.089
-    idata.rock.permx = 0.1 # [mD]
-    idata.rock.permy = 0.1  # [mD]
+    idata.rock.permx = 0.01 # [mD]
+    idata.rock.permy = 0.01  # [mD]
     idata.rock.permz = 1e-5 # [mD]
     idata.rock.perm_file = None  # if want to read the permeability from a file
 
@@ -95,8 +95,8 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
             pass
     idata.well_data.controls = InputDataWellControls()
     wctrl = idata.well_data.controls  #short name
-    wctrl.prod_rate = 8000  # m3/day. if None, well will work under BHP control
-    wctrl.inj_rate = 8000   # m3/day. if None, well will work under BHP control
+    wctrl.prod_rate = None  # m3/day. if None, well will work under BHP control
+    wctrl.inj_rate = None   # m3/day. if None, well will work under BHP control
     wctrl.delta_temp = 40   # bars. inj_temp = initial_temp - delta_temp
     wctrl.delta_p_inj  = 30  # bars. inj_bhp = initial_pressure + delta_p_inj
     wctrl.delta_p_prod = 30  # bars. inj_prod = initial_pressure - delta_p_prod

@@ -26,8 +26,8 @@ def run_simulation(idata : InputData, platform : str ='cpu'):
     m.set_output(output_folder = output_directory)
 
     # Specify some other time-related properties (NOTE: all time parameters are in [days])
-    size_report_step = 365  # Size of the reporting step
-    num_report_steps = 30   # Number of reporting steps (see above)
+    size_report_step = 730  # Size of the reporting step
+    num_report_steps = 15   # Number of reporting steps (see above)
 
     output_properties_main = m.physics.vars  # only main variables
     output_properties_with_temperature = output_properties_main + ['temperature']
