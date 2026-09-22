@@ -62,8 +62,8 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
     idata.geom['frac_aper'] = np.loadtxt(apertxt) 
     
     # well in the matrix cells or in the fractures
-    idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
-    #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
+    #idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
+    idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
     #idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
 
     # to mimic an infinite reservoir

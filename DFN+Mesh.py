@@ -19,7 +19,7 @@ buildMesh     = False   # True → run gmsh to build .msh from DFN txt files
 # ==============================================================================
 # DFN settings 
 # ==============================================================================
-DFN_name = 'Test6'
+DFN_name = 'Test1'
 
 # apertureCalculationParameters = {
 #     'method': 'constant',

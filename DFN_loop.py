@@ -15,90 +15,51 @@ if os.path.isdir(_conda_scripts) and _conda_scripts not in os.environ.get('PATH'
 from DFNMeshFiles.mesh.FractureProcessing.mesh_raw_fractures import mesh_raw_fractures
 
 # Define parameters and settings 
-# paramA_values = ['A1', 'A2']
-# paramB_values = ['B1', 'B2']
-# paramC_values = ['C1', 'C2', 'C3', 'C4']
-# paramD_values = ['D1', 'D2']
- 
-# param_combinations = list(itertools.product(
-#     paramA_values, paramB_values, paramC_values, paramD_values
-# ))
- 
-# # paramA: orientation 
-# paramA_lookup = {
-#     'A1': {'a1': {'kappa': 54.23, 'loc': 1.54}, 
-#            'a2': {'kappa': 26.10, 'loc': 0.66},
-#            'a3': {'kappa': 49.35, 'loc': 2.64}, 
-#            'a4': {'kappa': 37.46, 'loc': 0.73}},
-#     'A2': {'a1': {'kappa': 34.44, 'loc': 1.52}, 
-#            'a2': {'kappa': 16.90, 'loc': 0.67},
-#            'a3': {'kappa': 15.66, 'loc': 2.61}, 
-#            'a4': {'kappa': 11.78, 'loc': 0.79}},
-# }
- 
-# # paramB: spatial distribution 
-# paramB_lookup = {
-#     'B1': {'distB': 'Uniform', 'b1': {'max distance': 2000}, 'b2': {'max distance': 2000}, 'b3': {'max distance': 2000}, 'b4': {'max distance': 2000}},
-#     'B2': {'distB': 'Power-law',
-#            'b1': {'alpha': 0.32, 'min distance': 2.0, 'max distance': 9.13},  
-#            'b2': {'alpha': 0.21, 'min distance': 2.0, 'max distance': 67.54},   
-#            'b3': {'alpha': 0.18, 'min distance': 2.0, 'max distance': 95.92}, 
-#            'b4': {'alpha': 0.20, 'min distance': 2.0, 'max distance': 77.34}},
-# }
- 
-# # paramC: length dsitribution 
-# paramC_lookup = {
-#     'C1': {'distC': 'Exponential', 'inputC': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02}},
-#     'C2': {'distC': 'Exponential', 'inputC': {'lambda':0.006, 'Lmin':10.74, 'Lmax':942.93}},
-#     'C3': {'distC': 'Power-law', 'inputC': {'alpha': 0.34, 'Lmin':5.43, 'Lmax':679.02}},
-#     'C4': {'distC': 'Power-law', 'inputC': {'alpha':0.36, 'Lmin':10.74, 'Lmax':942.93}},
-# }
- 
-# # paramD: aperture 
-# paramD_lookup = {
-#     'D1': {'methodD': 'constant', 'inputD': {'aperture': 0.005}},   
-#     'D2': {'methodD': 'sunLinear', 'inputD': {'scalingCoefficient': 0.64, 'scalingExponent': 1.11}},
-# }
-
-
-
-
-
-paramA_values = ['A1']
-paramB_values = ['B1']
-paramC_values = ['C1']
-paramD_values = ['D1']
+paramA_values = ['A1', 'A2']
+paramB_values = ['B1', 'B2']
+paramC_values = ['C1', 'C2', 'C3', 'C4']
+paramD_values = ['D1', 'D2']
  
 param_combinations = list(itertools.product(
     paramA_values, paramB_values, paramC_values, paramD_values
 ))
-
+ 
 # paramA: orientation 
 paramA_lookup = {
-'A1':  {'a1': {'kappa': 54.23, 'loc': 1.54}, 
-        'a2': {'kappa': 26.10, 'loc': 0.66},
-        'a3': {'kappa': 49.35, 'loc': 2.64}, 
-        'a4': {'kappa': 37.46, 'loc': 0.73}},
+    'A1': {#'a1': {'kappa': 54.23, 'loc': 1.54}, 
+           'a2': {'kappa': 26.10, 'loc': 0.66},
+           'a3': {'kappa': 49.35, 'loc': 2.64}, 
+           'a4': {'kappa': 37.46, 'loc': 0.73}},
+    'A2': {#'a1': {'kappa': 34.44, 'loc': 1.52}, 
+           'a2': {'kappa': 16.90, 'loc': 0.67},
+           'a3': {'kappa': 15.66, 'loc': 2.61}, 
+           'a4': {'kappa': 11.78, 'loc': 0.79}},
 }
  
 # paramB: spatial distribution 
 paramB_lookup = {
-    'B1': {'distB': 'Uniform', 'b1': {'max distance': 2000}, 'b2': {'max distance': 2000}, 'b3': {'max distance': 2000}, 'b4': {'max distance': 2000}},
+    'B1': {'distB': 'Uniform', #'b1': {'max distance': 2000}, 
+           'b2': {'max distance': 2000}, 'b3': {'max distance': 2000}, 'b4': {'max distance': 1000}},
+    'B2': {'distB': 'Power-law',
+           # 'b1': {'alpha': 0.32, 'min distance': 2.0, 'max distance': 1000},  
+           'b2': {'alpha': 0.21, 'min distance': 2.0, 'max distance': 1000},   
+           'b3': {'alpha': 0.18, 'min distance': 2.0, 'max distance': 1000}, 
+           'b4': {'alpha': 0.20, 'min distance': 2.0, 'max distance': 1000}},
 }
  
 # paramC: length dsitribution 
 paramC_lookup = {
-    'C1': {'distC': 'Exponential', 'inputC': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02}},
+    'C1': {'distC': 'Exponential', 'inputC': {'lambda':0.008, 'Lmin':25, 'Lmax':679.02}},
+    'C2': {'distC': 'Exponential', 'inputC': {'lambda':0.006, 'Lmin':25, 'Lmax':942.93}},
+    'C3': {'distC': 'Power-law', 'inputC': {'alpha': 0.34, 'Lmin':25, 'Lmax':679.02}},
+    'C4': {'distC': 'Power-law', 'inputC': {'alpha':0.36, 'Lmin':25, 'Lmax':942.93}},
 }
  
 # paramD: aperture 
 paramD_lookup = {
     'D1': {'methodD': 'constant', 'inputD': {'aperture': 0.005}},   
+    'D2': {'methodD': 'sunLinear', 'inputD': {'scalingCoefficient': 0.64, 'scalingExponent': 1.11}},
 }
-
-
-
-
 
 # Copy the simulation loop from the DFN+Mesh.py file and set the right parameters 
 for paramA, paramB, paramC, paramD in param_combinations:
@@ -118,16 +79,16 @@ for paramA, paramB, paramC, paramD in param_combinations:
         **d['inputD'],   
     } 
 
-    set_1 = {
-        'I': 0.80,
-        'fractureLengthPDF': c['distC'],
-        'fractureLengthPDFParams': c['inputC'],
-        'spatialDistributionPDF': b['distB'],
-        'spatialDistributionPDFParams': b['b1'],
-        'orientationDistributionPDF': 'Von-Mises',
-        'orientationDistributionPDFParams': a['a1'],   
-        'bufferZone': {'method': 'constant', 'constant': 2.0},
-    }
+    # set_1 = {
+    #     'I': 0.80,
+    #     'fractureLengthPDF': c['distC'],
+    #     'fractureLengthPDFParams': c['inputC'],
+    #     'spatialDistributionPDF': b['distB'],
+    #     'spatialDistributionPDFParams': b['b1'],
+    #     'orientationDistributionPDF': 'Von-Mises',
+    #     'orientationDistributionPDFParams': a['a1'],   
+    #     'bufferZone': {'method': 'constant', 'constant': 2.0},
+    # }
 
     set_2 = {
         'I': 0.08,

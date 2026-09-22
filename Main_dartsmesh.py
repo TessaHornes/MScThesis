@@ -6,7 +6,7 @@ import os
 import numpy as np
 
 # List of all simulations
-simulation_names = ['Test1'] 
+simulation_names = ['Test_small'] 
 
 # Define path to mesh and aperture data
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +28,16 @@ for sim_name in simulation_names:
 
     # Create mesh 
     generate_mesh (Input_data)
+
+    # Import updated aperture file 
+    apertext_updated = os.path.join(
+        base_dir,
+        f'meshes_{sim_name}',
+        f'{sim_name}_raw_lc_50_aperture.txt'
+    )
+
+    # Load updated aperture data and update InputData
+    Input_data.geom['frac_aper'] = np.loadtxt(apertext_updated)
 
     # Run simulation 
     run_simulation(Input_data, platform='cpu')
