@@ -39,7 +39,7 @@ paramA_lookup = {
 # paramB: spatial distribution 
 paramB_lookup = {
     'B1': {'distB': 'Uniform', #'b1': {'max distance': 2000}, 
-           'b2': {'max distance': 2000}, 'b3': {'max distance': 2000}, 'b4': {'max distance': 1000}},
+           'b2': {'max distance': 1000}, 'b3': {'max distance': 1000}, 'b4': {'max distance': 1000}},
     'B2': {'distB': 'Power-law',
            # 'b1': {'alpha': 0.32, 'min distance': 2.0, 'max distance': 1000},  
            'b2': {'alpha': 0.21, 'min distance': 2.0, 'max distance': 1000},   
@@ -47,7 +47,7 @@ paramB_lookup = {
            'b4': {'alpha': 0.20, 'min distance': 2.0, 'max distance': 1000}},
 }
  
-# paramC: length dsitribution 
+# paramC: length distribution 
 paramC_lookup = {
     'C1': {'distC': 'Exponential', 'inputC': {'lambda':0.008, 'Lmin':25, 'Lmax':679.02}},
     'C2': {'distC': 'Exponential', 'inputC': {'lambda':0.006, 'Lmin':25, 'Lmax':942.93}},
@@ -58,7 +58,7 @@ paramC_lookup = {
 # paramD: aperture 
 paramD_lookup = {
     'D1': {'methodD': 'constant', 'inputD': {'aperture': 0.005}},   
-    'D2': {'methodD': 'sunLinear', 'inputD': {'scalingCoefficient': 0.64, 'scalingExponent': 1.11}},
+    'D2': {'methodD': 'subLinear', 'inputD': {'scalingCoefficient': 0.64, 'scalingExponent': 1.11}},
 }
 
 # Copy the simulation loop from the DFN+Mesh.py file and set the right parameters 
@@ -91,7 +91,7 @@ for paramA, paramB, paramC, paramD in param_combinations:
     # }
 
     set_2 = {
-        'I': 0.08,
+        'I': 0.10,
         'fractureLengthPDF': c['distC'],
         'fractureLengthPDFParams': c['inputC'],
         'spatialDistributionPDF': b['distB'],
@@ -125,8 +125,8 @@ for paramA, paramB, paramC, paramD in param_combinations:
 
 
     dfn_sets          = [set_2, set_3, set_4]
-    domainLengthX     = 2000   # m
-    domainLengthY     = 2000   # m
+    domainLengthX     = 1000   # m
+    domainLengthY     = 1000   # m
     numOfRealizations = 1
     Simulation_name = paramA + paramB + paramC + paramD
     DFN_name = Simulation_name

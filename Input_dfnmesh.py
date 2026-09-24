@@ -19,15 +19,15 @@ def input_data_nomesh(case_name, mesh_file):
 
     idata.geom['well_coords'] = dict()
 
-    idata.geom['well_coords']['I1'] = [500., 500., 0, 100]  # X, Y, Z1, Z2
-    idata.geom['well_coords']['P1'] = [1500., 1500., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['I1'] = [200., 200., 0, 100]  # X, Y, Z1, Z2
+    idata.geom['well_coords']['P1'] = [800., 800., 0, 100]  # X, Y, Z1, Z2
 
     # will be passed to UnstructuredDiscretizer
     idata.geom['frac_aper'] = 1e-3  # (initial) fracture aperture [m]
 
     # well in the matrix cells or in the fractures
-    idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
-    #idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
+    #idata.geom['well_loc_type'] = 'wells_in_nearest_cell'  # could be in the matrix or in the fracture, depending on the location
+    idata.geom['well_loc_type'] = 'wells_in_frac'  # put the well into the closest fracture
     #idata.geom['well_loc_type'] = 'wells_in_mat'  # put the well into the closest matrix cell
 
     # to mimic an infinite reservoir

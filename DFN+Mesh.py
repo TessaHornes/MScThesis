@@ -19,7 +19,7 @@ buildMesh     = False   # True → run gmsh to build .msh from DFN txt files
 # ==============================================================================
 # DFN settings 
 # ==============================================================================
-DFN_name = 'Test1'
+DFN_name = 'TestDFN'
 
 # apertureCalculationParameters = {
 #     'method': 'constant',
@@ -46,26 +46,26 @@ apertureCalculationParameters = {
 # }
 
 set_2 = {
-    'I': 0.02,
+    'I': 0.03,
     'fractureLengthPDF': 'Exponential',
     'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
-    'spatialDistributionPDF': 'Power-law',
-    'spatialDistributionPDFParams': {'alpha': 0.21, 'min distance': 2.0, 'max distance': 2000},
+    'spatialDistributionPDF': 'Uniform',
+    'spatialDistributionPDFParams': {'max distance': 1000},
     'orientationDistributionPDF': 'Von-Mises',
     'orientationDistributionPDFParams': {'kappa': 26.10, 'loc':0.626},    
     'bufferZone': {'method': 'constant', 'constant': 2.0},
 }
 
-# set_3 = {
-#     'I': 0.08,
-#     'fractureLengthPDF': 'Exponential',
-#     'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
-#     'spatialDistributionPDF': 'Uniform',
-#     'spatialDistributionPDFParams': {'max distance': 2000},
-#     'orientationDistributionPDF': 'Von-Mises',
-#     'orientationDistributionPDFParams': {'kappa': 49.35, 'loc':2.64},    #
-#     'bufferZone': {'method': 'constant', 'constant': 2.0},
-# }
+set_3 = {
+    'I': 0.05,
+    'fractureLengthPDF': 'Exponential',
+    'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
+    'spatialDistributionPDF': 'Uniform',
+    'spatialDistributionPDFParams': {'max distance': 1000},
+    'orientationDistributionPDF': 'Von-Mises',
+    'orientationDistributionPDFParams': {'kappa': 49.35, 'loc':2.64},    #
+    'bufferZone': {'method': 'constant', 'constant': 2.0},
+}
 
 # set_4 = {
 #     'I': 0.07,
@@ -79,15 +79,15 @@ set_2 = {
 # }
 
 
-dfn_sets          = [set_2]
-domainLengthX     = 2000   # m
-domainLengthY     = 2000   # m
+dfn_sets          = [set_2, set_3]
+domainLengthX     = 1000   # m
+domainLengthY     = 1000   # m
 numOfRealizations = 1
 
 # ==============================================================================
 # Simulation settings
 # ==============================================================================
-Simulation_name = 'Test6'
+Simulation_name = 'TestDFN'
 
 problem_type = 'fracture'   # 'fracture' or 'lineSource'
 char_len_list = [16]   # small (fine), medium, large (coarse), options are 16, 32, 64, takes an array 
