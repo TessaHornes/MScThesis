@@ -3,14 +3,14 @@ from darts.nonlinear_solvers import NewtonSolver, ChopSpec
 
 from darts.models.darts_model import DartsModel
 from darts.physics.base.physics import PhysicsBase
-from darts.physics.iapws_physics import IAPWSPhysics
 from darts.physics.base.property_container import PropertyContainer
-from dartsflash.mixtures import DARTSFlash, CompData, EoS, IAPWS
-from darts.physics.properties.eos_properties import EoSDensity, EoSEnthalpy
+from dartsflash.mixtures import CompData
 from darts.physics.properties.basic import ConstFunc, PhaseRelPerm
 from darts.physics.properties.viscosity import MaoDuan2009
 from darts.reservoirs.unstruct_reservoir import UnstructReservoir
-from darts.engines import ms_well
+from darts.physics.properties.flash import SinglePhase
+from darts.physics.properties.eos_properties import EoSEnthalpy
+from dartsflash.libflash import AQEoS
 import os
 import numpy as np
 import meshio
@@ -149,56 +149,40 @@ class Model(DartsModel):
         The adaptive interpolator is defined by per-axis step + origin and extends on demand.
         """
         components = ["H2O"]
-        phases = ['V', 'L']
+        phases = ['L']
         zero = 1e-12
         comp_data = CompData(components=components, setprops=True)
+        aq = AQEoS(comp_data, AQEoS.Jager2003)
 
         # state_spec=PH -> OBL axes are [pressure, enthalpy]; state_spec=PT -> [pressure, temperature]
-        self.physics = IAPWSPhysics(
-            phases, self.timer,
-            state_spec=PhysicsBase.StateSpecification.PH if is_ph else PhysicsBase.StateSpecification.PT,
+        self.physics = PhysicsBase(
+            components=components, phases=phases, timer=self.timer,
+            state_spec=PhysicsBase.StateSpecification.PT,
             axes_step=[p_step, t_step],
             axes_origin=[p_origin, t_origin],
             cache=cache,
         )
 
-        mixture = IAPWS(iapws_ideal=True, ice_phase=False)
-        if is_ph:
-            # PHFlash -> PXFlash(ENTHALPY) under the hood (dartsflash wrapper). Bound the
-            # PXFlash temperature root-finding to the IAPWS liquid range: the default
-            # t_min=100 K lets the solver sample far below the ice point, where IAPWS-95
-            # density bisection diverges ("LIQUID MINIMUM BISECTION not converged").
-            mixture.init_flash(flash_type=DARTSFlash.FlashType.PHFlash,
-                                t_min=273.15, t_max=575., t_init=350.)
-        else:
-            mixture.init_flash(flash_type=DARTSFlash.FlashType.PTFlash)
-        self.physics.set_mixture(mixture)
-
         """ Set property container and define properties """
         pc = PropertyContainer(phases_name=phases, components_name=components,
                                Mw=comp_data.Mw, eps_z=zero)
         self.physics.add_property_region(pc)
-
-        pc.flash_ev = self.physics.get_flash_ev()
-
+       
+        pc.flash_ev = SinglePhase(nc=len(components))
+        from darts.physics.properties.density import Garcia2001
         pc.density_ev = {
-            'V': EoSDensity(eos=mixture.eos["IAPWS"], root_flag=EoS.RootFlag.MAX),
-            'L': EoSDensity(eos=mixture.eos["IAPWS"], root_flag=EoS.RootFlag.MIN),
+            'L': Garcia2001(components),
         }
         pc.viscosity_ev = {
-            'V': ConstFunc(0.01),                  # cP, steam
             'L': MaoDuan2009(components),          # cP, liquid water (pressure/temperature-dependent)
         }
         pc.enthalpy_ev = {
-            'V': self.physics.get_enthalpy_ev_from_flash(phase_idx=0),
-            'L': self.physics.get_enthalpy_ev_from_flash(phase_idx=1),
+            'L': EoSEnthalpy(eos=aq)
         }
         pc.rel_perm_ev = {
-            'V': PhaseRelPerm("gas", swc=0.0),
             'L': PhaseRelPerm("oil", swc=0.0),
         }
         pc.conductivity_ev = {
-            'V': ConstFunc(0.0),
             'L': ConstFunc(172.8),                 # kJ/m/day/K, matches geothermal default
         }
         # output_props exposes derived T (K) via the property interpolator
