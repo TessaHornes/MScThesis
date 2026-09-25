@@ -6,7 +6,7 @@ import os
 import numpy as np
 
 # List of all simulations
-simulation_names = ['TestDFN'] 
+simulation_names = ['RealisticDFN'] 
 
 # Define path to mesh and aperture data
 base_dir = os.path.dirname(os.path.abspath(__file__))

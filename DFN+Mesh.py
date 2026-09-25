@@ -19,7 +19,7 @@ buildMesh     = False   # True → run gmsh to build .msh from DFN txt files
 # ==============================================================================
 # DFN settings 
 # ==============================================================================
-DFN_name = 'TestDFN'
+DFN_name = 'RealisticDFN'
 
 # apertureCalculationParameters = {
 #     'method': 'constant',
@@ -29,8 +29,8 @@ DFN_name = 'TestDFN'
 # EDIT - sublinear aperture calculations 
 apertureCalculationParameters = {
     'method': 'subLinear',
-    'scalingCoefficient': 5e-5,   
-    'scalingExponent': 0.5,
+    'scalingCoefficient': 0.64,   
+    'scalingExponent': 1.11,
 }
 # End of edit 
 
@@ -46,40 +46,40 @@ apertureCalculationParameters = {
 # }
 
 set_2 = {
-    'I': 0.03,
+    'I': 0.10,
     'fractureLengthPDF': 'Exponential',
-    'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
+    'fractureLengthPDFParams': {'lambda':0.006, 'Lmin':25, 'Lmax':942.93},
     'spatialDistributionPDF': 'Uniform',
     'spatialDistributionPDFParams': {'max distance': 1000},
     'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 26.10, 'loc':0.626},    
+    'orientationDistributionPDFParams': {'kappa': 26.10, 'loc': 0.66},    
     'bufferZone': {'method': 'constant', 'constant': 2.0},
 }
 
 set_3 = {
-    'I': 0.05,
+    'I': 0.08,
     'fractureLengthPDF': 'Exponential',
-    'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
+    'fractureLengthPDFParams': {'lambda':0.006, 'Lmin':25, 'Lmax':942.93},
     'spatialDistributionPDF': 'Uniform',
     'spatialDistributionPDFParams': {'max distance': 1000},
     'orientationDistributionPDF': 'Von-Mises',
-    'orientationDistributionPDFParams': {'kappa': 49.35, 'loc':2.64},    #
+    'orientationDistributionPDFParams': {'kappa': 49.35, 'loc': 2.64},    #
     'bufferZone': {'method': 'constant', 'constant': 2.0},
 }
 
-# set_4 = {
-#     'I': 0.07,
-#     'fractureLengthPDF': 'Exponential',
-#     'fractureLengthPDFParams': {'lambda':0.008, 'Lmin':5.43, 'Lmax':679.02},
-#     'spatialDistributionPDF': 'Uniform',
-#     'spatialDistributionPDFParams': {'max distance': 2000},
-#     'orientationDistributionPDF': 'Von-Mises',
-#     'orientationDistributionPDFParams': {'kappa': 37.46, 'loc':0.73},    #
-#     'bufferZone': {'method': 'constant', 'constant': 2.0},
-# }
+set_4 = {
+    'I': 0.07,
+    'fractureLengthPDF': 'Exponential',
+    'fractureLengthPDFParams': {'lambda':0.006, 'Lmin':25, 'Lmax':942.93},
+    'spatialDistributionPDF': 'Uniform',
+    'spatialDistributionPDFParams': {'max distance': 1000},
+    'orientationDistributionPDF': 'Von-Mises',
+    'orientationDistributionPDFParams': {'kappa': 37.46, 'loc': 0.73},    #
+    'bufferZone': {'method': 'constant', 'constant': 2.0},
+}
 
 
-dfn_sets          = [set_2, set_3]
+dfn_sets          = [set_2, set_3, set_4]
 domainLengthX     = 1000   # m
 domainLengthY     = 1000   # m
 numOfRealizations = 1
@@ -87,7 +87,7 @@ numOfRealizations = 1
 # ==============================================================================
 # Simulation settings
 # ==============================================================================
-Simulation_name = 'TestDFN'
+Simulation_name = 'RealisticDFN'
 
 problem_type = 'fracture'   # 'fracture' or 'lineSource'
 char_len_list = [16]   # small (fine), medium, large (coarse), options are 16, 32, 64, takes an array 

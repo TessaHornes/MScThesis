@@ -14,8 +14,8 @@ def input_data_nomesh(case_name, mesh_file):
     idata.geom['mesh_filename'] = mesh_file 
 
     # well locations
-    idata.geom['inj_well_coords'] = [[500, 500, 50]]  # X, Y, Z (only one perforation)
-    idata.geom['prod_well_coords'] = [[1500, 1500, 50]]
+    idata.geom['inj_well_coords'] = [[200, 200, 50]]  # X, Y, Z (only one perforation)
+    idata.geom['prod_well_coords'] = [[800, 800, 50]]
 
     idata.geom['well_coords'] = dict()
 

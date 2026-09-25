@@ -69,6 +69,10 @@ def run_simulation(idata : InputData, platform : str ='cpu'):
     m.print_timers()
     m.print_stat()
 
+    # compute and save well time data
+    time_data_dict = m.output.store_well_time_data(save_output_files=True)
+
+
     return m
 
 if __name__ == "__main__":
