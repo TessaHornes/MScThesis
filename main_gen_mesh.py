@@ -127,8 +127,8 @@ if __name__ == "__main__":
 
     t1 = datetime.now()
     print(t1)
-    from set_case import set_input_data
-    input_data = set_input_data('case_1')
+    from Input_dartsmesh import input_data_mesh
+    input_data = input_data_mesh('case_name')
     generate_mesh(input_data)
 
     t2 = datetime.now()
