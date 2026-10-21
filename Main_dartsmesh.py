@@ -26,7 +26,7 @@ for sim_name in simulation_names:
 
     # Add fratures to make wells end up in fractures 
     with open(fractext_path, 'a') as f:
-        f.write('190 210 210 190\n790 810 810 790\n')
+        f.write('190 790 210 810\n790 190 810 210\n')
 
     with open(apertext_path, 'a') as f:
         f.write('0.005\n0.005\n')

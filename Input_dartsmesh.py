@@ -103,8 +103,8 @@ def input_data_mesh(case_name, fractext, apertxt, domainLengthX, domainLengthY, 
     wctrl.delta_temp = 30   # bars. inj_temp = initial_temp - delta_temp
     #wctrl.delta_p_inj  = 53  # bars. inj_bhp = initial_pressure + delta_p_inj
     #wctrl.delta_p_prod = 53  # bars. inj_prod = initial_pressure - delta_p_prod
-    wctrl.prod_bhp_constraint = 50 # bars
-    wctrl.inj_bhp_constraint = 250 # bars
+    wctrl.prod_bhp_constraint = 69 # bars
+    wctrl.inj_bhp_constraint = 207 # bars
 
     # principal stress, MPa.
     # Set to None if don't want to recompute fracture apertures by initial stresses
